@@ -239,7 +239,7 @@ Todo el paquete está en regla: proveedor activo, aprobadora del centro, monto d
 | CA1–CA5 | Hecho | CA3 con doble seguro probado con un modelo falso de guion fijo. |
 | Front | Hecho | Tarjetas de herramientas, resaltado de confirmación, botones, responsive. |
 | `demo.ts` | Hecho | Compara contra lo esperado y sale con código 1 si difiere. |
-| Prueba punta a punta con el modelo | Parcial | El servidor y el manejo de errores están verificados. La conversación real quedó pendiente porque la cuenta de prueba no tenía créditos. [COMPLETAR tras probar] |
+| Prueba punta a punta con el modelo | Parcial | El servidor y el manejo de errores están verificados. La conversación real con el modelo quedó pendiente porque la cuenta de la API no tenía créditos al momento de entregar. Basta con poner una key con saldo en `ANTHROPIC_API_KEY`, sin cambios de código. |
 | Link público | Hecho | https://reto-03-agente-oc.onrender.com, desplegado en Render (Bun 1.4.4, `OUT_DIR=/tmp/out`). `/api/health`, el front y el manejo de errores del chat están verificados en el link. |
 | `oc_leer_excel` (P1) | No hecho | Opcional. |
 | Bonus `modulo/` (9.4) | Hecho | `agent.md` y `SKILL.md` se generan desde las fuentes de la app. `tools/oc.ts` reexporta los mismos objetos. `bun run modulo:check` falla si hay divergencia. |
@@ -255,14 +255,28 @@ Todo el paquete está en regla: proveedor activo, aprobadora del centro, monto d
 
 ## 11. Uso de IA
 
-| Asistente | Para qué lo usé | Qué descarté de lo que propuso y por qué |
+| Asistente | Para qué lo usé | Qué descarté o corregí de lo que propuso, y por qué |
 |---|---|---|
-| [COMPLETAR: asistente y modelo] | [COMPLETAR: tareas, p. ej. plan por fases, código de herramientas y reglas, front, documentación] | [COMPLETAR] |
-| [COMPLETAR] | [COMPLETAR] | [COMPLETAR] |
+| Claude Code (modelo Claude Opus 5.5), dentro de VS Code | Construcción por fases que yo revisaba antes de aprobar la siguiente: (1) herramientas, reglas RC1–RC10, SAP simulado y `demo.ts`; (2) adaptador LLM, ciclo del agente, servidor, prompt, conocimiento y front; (3) README y SOLUCION.md; (4) deploy en Render; además, el módulo bonus. También lo usé para preparar el repositorio y resolver el error de certificado SSL al conectar Git con GitHub. | Agregaba "Co-Authored-By: Claude" en los commits; lo rechacé y se reescribió la historia para que los commits quedaran solo a mi nombre. Iba a publicar `PRD.md` en el repositorio; lo excluí porque el repo es público y es un documento del proceso de selección. Propuso cambios de diseño que revisé uno a uno antes de aceptarlos: fuentes adicionales en la trazabilidad, herramientas que releen el caso en vez de confiar en el payload del modelo, esfuerzo `medium` y reintento automático en otro modelo. |
 
-**Cómo verifiqué lo generado:** [COMPLETAR: p. ej. revisión línea por línea, `bun run demo` contra los resultados esperados, `tsc` estricto, prueba del doble seguro con un modelo falso de guion fijo].
+**Cómo trabajé con la IA y cómo verifiqué lo que generó.** Leí y fui auditando fase a fase lo que hacía. Al inicio le pedí un plan de máximo 10 líneas y no le dejé escribir código hasta aprobarlo. Al final de cada fase revisé el código y la salida antes de autorizar la siguiente. Además de esa lectura, verifiqué con evidencia ejecutable:
 
-**Decisiones que tomé yo (no la IA):** [COMPLETAR: p. ej. los 7 supuestos aprobados, el criterio de aceptación por caso, el stack].
+- `bun run demo` contra el resultado esperado que definí para los 6 casos; sale con código 1 si algo difiere.
+- `tsc` en modo estricto, sin `any`.
+- El doble seguro de confirmación (CA3), probado con un modelo simulado que sigue un guion fijo: bloquea crear sin pregunta previa, tras un "No confirmo" y para un caso distinto del preguntado; con "Confirmo" crea la OC.
+- El servidor arrancado sin API key y con una key sin créditos, para comprobar que el chat muestra un error claro y la sesión no se cae.
+- `bun run modulo:check`, que comprueba que el módulo bonus no diverge de la aplicación.
+- El link de Render: `/api/health`, el front, el chat y que la key no aparezca en ninguna respuesta.
+
+**Decisiones que tomé yo, no la IA:**
+
+- El stack: Bun + TypeScript estricto, Hono, HTML plano y el SDK de Anthropic detrás de un adaptador propio. También prohibí Vercel AI SDK, LangChain y frameworks de agentes, para que el ciclo del agente fuera propio y pudiera explicarlo.
+- La estructura obligatoria del repositorio y el contrato de las herramientas.
+- Los 7 supuestos de interpretación del PRD (sección 9) y el resultado esperado por caso, que usé como criterio de aceptación en `demo.ts`.
+- El doble seguro de confirmación: además del prompt, un control en el backend.
+- Trabajar por fases con revisión obligatoria entre cada una.
+- Que la API key nunca estuviera en el repositorio y que los commits figuraran solo a mi nombre.
+- Hacer el bonus del módulo reutilizable.
 
 ## 12. Riesgos de llevar esto a producción
 
