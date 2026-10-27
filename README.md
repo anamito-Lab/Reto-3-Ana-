@@ -101,6 +101,71 @@ demo.ts                         verificación sin modelo
 fixtures/                       datos entregados (solo lectura)
 ```
 
+## Deploy en Render
+
+El repositorio trae un `render.yaml` (Blueprint) con toda la configuración. Hay dos caminos; el primero es el más corto.
+
+### Opción A · Blueprint
+
+1. En [render.com](https://render.com), inicia sesión con GitHub y autoriza el acceso al repositorio `anamito-Lab/Reto-3-Ana-`.
+2. **New → Blueprint** → elige el repositorio → Render lee `render.yaml`.
+3. Cuando lo pida, pega el valor de `ANTHROPIC_API_KEY`. Es la única variable secreta y nunca va en el repositorio.
+4. **Apply**. El primer deploy tarda unos 2–3 minutos.
+
+### Opción B · Web Service manual
+
+**New → Web Service** → conecta el repositorio y configura:
+
+| Campo | Valor |
+|---|---|
+| Language / Runtime | Node |
+| Branch | `main` |
+| Build Command | `bun install` |
+| Start Command | `bun run start` |
+| Health Check Path | `/api/health` |
+| Instance Type | Free |
+
+Variables de entorno (**Environment**):
+
+| Variable | Valor |
+|---|---|
+| `BUN_VERSION` | `1.4.4` (la misma versión con que se generó `bun.lock`) |
+| `NODE_ENV` | `production` |
+| `ANTHROPIC_API_KEY` | tu key de la API (marcada como secreta) |
+| `LLM_MODEL` | `claude-opus-5-5` |
+| `OUT_DIR` | `/tmp/out` |
+| `MAX_ITERACIONES` | `25` |
+| `MAX_TOKENS_SESION` | `200000` |
+| `LLM_TIMEOUT_MS` | `60000` |
+
+`PORT` no se define: Render la asigna y el servidor la lee automáticamente.
+
+### Verificar el deploy
+
+```bash
+curl https://<tu-servicio>.onrender.com/api/health
+# {"ok":true,"provider":"anthropic","model":"claude-opus-5-5","apiKeyConfigurada":true}
+```
+
+Luego abre `https://<tu-servicio>.onrender.com` y procesa `sol-001`.
+
+### A tener en cuenta
+
+- **Plan gratuito:** el servicio se duerme tras 15 minutos sin tráfico y el primer request tarda unos 50 s en despertarlo. Ábrelo unos minutos antes de la defensa.
+- **Disco efímero:** `OUT_DIR=/tmp/out` se borra en cada deploy o reinicio. La numeración de OC vuelve a 4500000001 y las sesiones (en memoria) se pierden. Para la prueba es suficiente; en producción habría un disco persistente o el SAP real.
+- **Costo:** el link es público. Los topes `MAX_ITERACIONES` y `MAX_TOKENS_SESION` limitan lo que puede gastar cada sesión.
+- **Si el build falla con `bun: command not found`:** revisa que `BUN_VERSION` esté definida. Como alternativa, usa *Language: Docker* con este `Dockerfile` en la raíz:
+
+  ```dockerfile
+  FROM oven/bun:1
+  WORKDIR /app
+  COPY package.json bun.lock ./
+  RUN bun install --production
+  COPY . .
+  ENV NODE_ENV=production OUT_DIR=/tmp/out
+  CMD ["bun", "run", "start"]
+  ```
+
 ## Comandos
 
 | Comando | Qué hace |

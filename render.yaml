@@ -1,0 +1,27 @@
+# Blueprint de Render: New → Blueprint → seleccionar este repositorio.
+# La API key NO va aquí: Render la pide al crear el servicio (sync: false).
+services:
+  - type: web
+    name: reto-03-agente-oc
+    runtime: node
+    plan: free
+    buildCommand: bun install
+    startCommand: bun run start
+    healthCheckPath: /api/health
+    envVars:
+      - key: BUN_VERSION
+        value: 1.4.4
+      - key: NODE_ENV
+        value: production
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: LLM_MODEL
+        value: claude-opus-5-5
+      - key: OUT_DIR
+        value: /tmp/out
+      - key: MAX_ITERACIONES
+        value: "25"
+      - key: MAX_TOKENS_SESION
+        value: "200000"
+      - key: LLM_TIMEOUT_MS
+        value: "60000"
