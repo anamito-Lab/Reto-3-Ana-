@@ -98,8 +98,24 @@ src/agent/                      ciclo del agente, sesiones, registro de herramie
 src/server.ts                   API HTTP (Hono) y front estático
 web/                            chat en HTML + JS plano
 demo.ts                         verificación sin modelo
+modulo/                         bonus: agente empaquetado (agent.md, tools/oc.ts, skill/ordenes-compra/SKILL.md)
+scripts/modulo.ts               genera y verifica modulo/ desde las fuentes de la app
 fixtures/                       datos entregados (solo lectura)
 ```
+
+## Bonus: módulo reutilizable
+
+`modulo/` empaqueta el agente para otras plataformas sin depender del servidor (PRD 9.4). Las tres piezas son las mismas que usa la aplicación:
+
+- `modulo/tools/oc.ts` reexporta los objetos de `src/tools/oc.ts`.
+- `agent.md` y `SKILL.md` se generan desde `agent/prompt.md` y `src/knowledge/ordenes-compra.md`.
+
+```bash
+bun run modulo         # regenera agent.md y SKILL.md
+bun run modulo:check   # falla si alguna pieza diverge de la aplicación
+```
+
+Detalle en [modulo/README.md](modulo/README.md).
 
 ## Deploy en Render
 
@@ -174,3 +190,4 @@ Luego abre `https://<tu-servicio>.onrender.com` y procesa `sol-001`.
 | `bun run start` | Servidor en modo producción. |
 | `bun run demo` | Verificación de los 6 casos sin modelo. |
 | `bun run typecheck` | `tsc --noEmit` en modo estricto. |
+| `bun run modulo` / `bun run modulo:check` | Regenera / verifica el módulo reutilizable. |

@@ -200,6 +200,7 @@ Todo el paquete está en regla: proveedor activo, aprobadora del centro, monto d
 | 5 | **Conocimiento concatenado al system prompt.** | Una herramienta `consultar_conocimiento`. | El documento ocupa ≈ 1.200 tokens y se usa en cada caso. Incluirlo (y cachearlo) es más barato y fiable que una llamada extra. Si crece, se migra a herramienta o skill. |
 | 6 | **Front en HTML + JS plano** servido por el mismo servidor. | React o Svelte con un bundler. | Un solo proceso, cero build y despliegue trivial. La interfaz es pequeña y el markdown se renderiza con un parser mínimo que escapa todo antes de dar formato. |
 | 7 | **Sesiones en memoria.** | Persistirlas en archivos. | El PRD lo permite y no hay multiusuario. El costo es perder las sesiones al reiniciar; las OC, el log y `control.csv` sí persisten en `OUT_DIR`. |
+| 8 | **Módulo (bonus) generado desde las fuentes de la app.** `tools/oc.ts` reexporta y `agent.md`/`SKILL.md` se regeneran con un script que también verifica. | Copiar los archivos a `modulo/`, o hacer que la app lea desde `modulo/`. | Una copia diverge con el primer cambio. Invertir la fuente rompería la estructura que pide el PRD (`agent/prompt.md`, `src/knowledge/`). Con generación y un chequeo que falla, hay una sola fuente de verdad y la divergencia se detecta. |
 
 ## 9. Supuestos
 
@@ -241,7 +242,7 @@ Todo el paquete está en regla: proveedor activo, aprobadora del centro, monto d
 | Prueba punta a punta con el modelo | Parcial | El servidor y el manejo de errores están verificados. La conversación real quedó pendiente porque la cuenta de prueba no tenía créditos. [COMPLETAR tras probar] |
 | Link público | [COMPLETAR] | Instrucciones de deploy en Render en el README. |
 | `oc_leer_excel` (P1) | No hecho | Opcional. |
-| Bonus `modulo/` (9.4) | No hecho | Opcional. |
+| Bonus `modulo/` (9.4) | Hecho | `agent.md` y `SKILL.md` se generan desde las fuentes de la app. `tools/oc.ts` reexporta los mismos objetos. `bun run modulo:check` falla si hay divergencia. |
 
 **Qué falta para producción:**
 - Adaptador SAP real (sección 6) con sus pruebas de integración.
