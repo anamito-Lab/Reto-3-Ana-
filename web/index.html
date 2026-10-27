@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agente OC SAP</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="barra">
+      <div class="marca">
+        <span class="logo" aria-hidden="true">OC</span>
+        <div>
+          <h1>Agente de Órdenes de Compra</h1>
+          <p id="estado" class="estado">Conectando…</p>
+        </div>
+      </div>
+      <button id="nueva" class="boton secundario" type="button">Nueva sesión</button>
+    </header>
+
+    <main id="chat" class="chat" aria-live="polite">
+      <section id="bienvenida" class="bienvenida">
+        <h2>¿Qué solicitud procesamos?</h2>
+        <p>El agente lee el paquete, lo valida contra los maestros (RC1–RC10), arma la OC, genera la evidencia y la crea en el SAP simulado. Las excepciones te las devuelve para que decidas.</p>
+        <div class="sugerencias">
+          <button type="button" data-texto="Procesa la solicitud sol-001">sol-001 · flujo normal</button>
+          <button type="button" data-texto="Procesa la solicitud sol-002">sol-002 · proveedor</button>
+          <button type="button" data-texto="Procesa la solicitud sol-003">sol-003 · aprobador</button>
+          <button type="button" data-texto="Procesa la solicitud &quot;sol-004&quot;. Muéstrame la OC como quedaría en SAP, qué validaciones pasó y cuáles no, y no la crees hasta que yo lo confirme.">sol-004 · cotización</button>
+          <button type="button" data-texto="Procesa la solicitud sol-005">sol-005 · retroactiva</button>
+          <button type="button" data-texto="Procesa la solicitud sol-006">sol-006 · IVA</button>
+        </div>
+      </section>
+    </main>
+
+    <form id="formulario" class="entrada">
+      <textarea id="mensaje" rows="1" placeholder="Escribe un mensaje… (Enter para enviar, Shift+Enter para salto de línea)" aria-label="Mensaje"></textarea>
+      <button id="enviar" class="boton" type="submit">Enviar</button>
+    </form>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
