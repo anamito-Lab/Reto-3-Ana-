@@ -240,7 +240,7 @@ Todo el paquete está en regla: proveedor activo, aprobadora del centro, monto d
 | Front | Hecho | Tarjetas de herramientas, resaltado de confirmación, botones, responsive. |
 | `demo.ts` | Hecho | Compara contra lo esperado y sale con código 1 si difiere. |
 | Prueba punta a punta con el modelo | Parcial | El servidor y el manejo de errores están verificados. La conversación real quedó pendiente porque la cuenta de prueba no tenía créditos. [COMPLETAR tras probar] |
-| Link público | [COMPLETAR] | Instrucciones de deploy en Render en el README. |
+| Link público | Hecho | https://reto-03-agente-oc.onrender.com, desplegado en Render (Bun 1.4.4, `OUT_DIR=/tmp/out`). `/api/health`, el front y el manejo de errores del chat están verificados en el link. |
 | `oc_leer_excel` (P1) | No hecho | Opcional. |
 | Bonus `modulo/` (9.4) | Hecho | `agent.md` y `SKILL.md` se generan desde las fuentes de la app. `tools/oc.ts` reexporta los mismos objetos. `bun run modulo:check` falla si hay divergencia. |
 

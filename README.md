@@ -2,7 +2,7 @@
 
 Reto técnico 03 · Periferia IT Group. Agente que lee el paquete de una solicitud de compra, lo valida contra los maestros (reglas RC1–RC10), arma la OC, genera la evidencia de aprobación y la crea en un SAP simulado. Las excepciones se devuelven al humano para que decida.
 
-- **Link de prueba:** [COMPLETAR tras el deploy en Render]
+- **Link de prueba:** https://reto-03-agente-oc.onrender.com (plan gratuito de Render: si estuvo inactivo, el primer acceso tarda unos 50 s en despertar).
 - **Clave de acceso al link:** no aplica (el link es público).
 - Planteamiento completo de la solución: [SOLUCION.md](SOLUCION.md).
 
