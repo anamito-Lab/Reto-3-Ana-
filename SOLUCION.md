@@ -94,7 +94,14 @@ Probé el doble seguro con un modelo falso que sigue un guion fijo, sin gastar t
 | Salida (texto + razonamiento) | ≈ 2.000–4.000 tokens → USD 0,04–0,08 |
 | **Total por caso** | **≈ USD 0,10–0,20**; un turno extra de confirmación suma ≈ USD 0,05 |
 
-Es una estimación que hice a partir del tamaño real del prompt y de los resultados de las herramientas. No está medida, porque la cuenta de prueba no tenía créditos al momento de escribir esto. Con `MAX_TOKENS_SESION=200000`, una sesión no puede gastar más de ≈ USD 1–2.
+**Medición real** (tokens de entrada + salida que reporta el API, acumulados por sesión):
+
+| Caso | Turnos | Tokens | Costo aproximado | Tiempo |
+|---|---|---|---|---|
+| sol-001 (creación directa) | 1 | 26.618 | ≈ USD 0,12–0,15 | 10,5 s |
+| sol-004 (revisión + confirmación) | 2 | 38.790 | ≈ USD 0,17–0,21 | 14,7 s + 5,5 s |
+
+El rango de costo sale de suponer que entre el 90 % y el 95 % de los tokens son de entrada. El gasto exacto se ve en la consola de Anthropic. Confirma la estimación inicial: un caso cuesta entre USD 0,10 y 0,20. Con `MAX_TOKENS_SESION=200000`, una sesión no puede gastar más de ≈ USD 1.
 
 ## 5. Matriz de controles
 
@@ -239,7 +246,7 @@ Todo el paquete está en regla: proveedor activo, aprobadora del centro, monto d
 | CA1–CA5 | Hecho | CA3 con doble seguro probado con un modelo falso de guion fijo. |
 | Front | Hecho | Tarjetas de herramientas, resaltado de confirmación, botones, responsive. |
 | `demo.ts` | Hecho | Compara contra lo esperado y sale con código 1 si difiere. |
-| Prueba punta a punta con el modelo | Parcial | El servidor y el manejo de errores están verificados. La conversación real con el modelo quedó pendiente porque la cuenta de la API no tenía créditos al momento de entregar. Basta con poner una key con saldo en `ANTHROPIC_API_KEY`, sin cambios de código. |
+| Prueba punta a punta con el modelo | Hecho | Con `claude-opus-5-5`: sol-001 se creó sin intervención humana (OC 4500000001, 5 herramientas, ≈ 10 s). sol-004, con el prompt de la sección 11 del PRD, mostró la tabla y RC5 con ambos valores y cerró el turno preguntando; tras "Confirmo" creó la OC 4500000002 con la excepción registrada. |
 | Link público | Hecho | https://reto-03-agente-oc.onrender.com, desplegado en Render (Bun 1.4.4, `OUT_DIR=/tmp/out`). `/api/health`, el front y el manejo de errores del chat están verificados en el link. |
 | `oc_leer_excel` (P1) | No hecho | Opcional. |
 | Bonus `modulo/` (9.4) | Hecho | `agent.md` y `SKILL.md` se generan desde las fuentes de la app. `tools/oc.ts` reexporta los mismos objetos. `bun run modulo:check` falla si hay divergencia. |

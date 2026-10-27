@@ -30,7 +30,11 @@ async function seguro(fn: () => Promise<string>): Promise<string> {
   }
 }
 
-const relativa = (ctx: ContextoHerramienta, ruta: string) => path.relative(ctx.directory, ruta).replace(/\\/g, "/")
+/** Ruta relativa a la raíz del proyecto; si OUT_DIR está fuera de ella (p. ej. /tmp/out), la absoluta. */
+function relativa(ctx: ContextoHerramienta, ruta: string): string {
+  const rel = path.relative(ctx.directory, ruta)
+  return (rel.startsWith("..") || path.isAbsolute(rel) ? ruta : rel).replace(/\\/g, "/")
+}
 
 type CasoPreparado = { paquete: Paquete; maestros: Maestros; validacion: ResultadoValidacion }
 
